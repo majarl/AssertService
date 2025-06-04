@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Player</title>
+	<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+</head>
+
+<body>
+	<h1>Player</h1>
+
+	<video id="video"></video>
+	
+	<script>
+		console.log("Preparing video...");
+		const video = document.getElementById('video');
+		const videoSrc = 'http://localhost/media/oregano.m3u8';
+
+		if (Hls.isSupported()) {
+			console.log("Hls isSupported");
+			const hls = new Hls();
+			hls.loadSource(videoSrc);
+			hls.attachMedia(video);
+			hls.on(Hls.Events.MANIFEST_PARSED, function () {
+				console.log("Playing...");
+				video.play();
+			});
+		} else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+			console.log("canPlayType application/vnd.apple.mpegurl");
+			video.src = videoSrc;
+			video.attEventListener('loadedmetadata', function() {
+				console.log("Playing...");
+				video.play();
+			});
+		} else {
+			console.log("Error. :-(");
+		}
+	</script>
+
+
+</body>
+</html>
