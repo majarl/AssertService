@@ -24,7 +24,9 @@
 	<script>
 		console.log("Preparing video...");
 		const video = document.getElementById('video_player');
-		const videoSrc = 'http://localhost/media/cat.m3u8';
+		// const videoSrc = 'http://localhost:8000/media/cat.m3u8';
+		const videoSrc = 'media/cat.m3u8';
+
 
 		if (Hls.isSupported()) {
 			console.log("Hls isSupported");
