@@ -5,16 +5,25 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>Player</title>
 	<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+
+	<style>
+		#video_player {
+			width: 800px;
+			height: 450px;
+			border: 1px solid black;
+		}
+	</style>
 </head>
 
 <body>
 	<h1>Player</h1>
 
-	<video id="video"></video>
+	<video id="video_player"></video>
+	<p><button id="play">Play</button></p>
 
 	<script>
 		console.log("Preparing video...");
-		const video = document.getElementById('video');
+		const video = document.getElementById('video_player');
 		const videoSrc = 'http://localhost/media/oregano.m3u8';
 
 		if (Hls.isSupported()) {
@@ -23,19 +32,26 @@
 			hls.loadSource(videoSrc);
 			hls.attachMedia(video);
 			hls.on(Hls.Events.MANIFEST_PARSED, function () {
-				console.log("Playing...");
-				video.play();
 			});
 		} else if (video.canPlayType('application/vnd.apple.mpegurl')) {
 			console.log("canPlayType application/vnd.apple.mpegurl");
 			video.src = videoSrc;
 			video.attEventListener('loadedmetadata', function() {
-				console.log("Playing...");
-				video.play();
 			});
 		} else {
 			console.log("Error. :-(");
 		}
+
+		const playButton = document.getElementById("play");
+		playButton.addEventListener("click", () => {
+			if (video.paused) {
+				console.log("Attempting to play...");
+				video.play();
+			} else {
+				console.log("Attempting to pause...");
+				video.pause();
+			}
+		});
 	</script>
 
 	<hr>
