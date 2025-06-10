@@ -27,3 +27,7 @@ terraform.rc
 # Java
 target
 
+idea
+*.iws
+*.iml
+*.ipr
