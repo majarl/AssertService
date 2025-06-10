@@ -36,3 +36,4 @@ idea
 *.iws
 *.iml
 *.ipr
+.idea/
