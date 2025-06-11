@@ -9,9 +9,9 @@
 <body>
     <h1>Uploader</h1>
 
-    <form action="upload" method="post" enctype="multipart/form-data">
-        <label for="fileInput">Pick file:</label>
-        <input type="file" id="fileInput">
+    <form action="api/media-uploader/upload" method="post" enctype="multipart/form-data">
+        <label for="file">Pick file:</label>
+        <input type="file" id="file" name="file">
         <br>
         <input type="submit" value="Upload">
     </form>
