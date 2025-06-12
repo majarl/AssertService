@@ -1,4 +1,6 @@
+
 todo.md
+data/
 
 # Terraform:
 .terraform/
@@ -37,3 +39,4 @@ idea
 *.iml
 *.ipr
 .idea/
+
