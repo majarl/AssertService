@@ -19,10 +19,13 @@ public class FileMediaStoreService implements MediaStoreService {
 
     private final Path mediaStorePath;
 
+    private final UploadMessaging messaging;
+
     @Autowired
-    public FileMediaStoreService(MediaStoreConfig config) {
+    public FileMediaStoreService(MediaStoreConfig config, UploadMessaging messaging) {
         log.info("Creating a storage service with location: {}", config.getLocation());
         this.mediaStorePath = Paths.get(config.getLocation());
+        this.messaging = messaging;
     }
 
 
@@ -37,6 +40,7 @@ public class FileMediaStoreService implements MediaStoreService {
         Path destFile = this.mediaStorePath.resolve(filename);
         try {
             Files.copy(file.getInputStream(), destFile);
+            messaging.fileNotice(destFile);
         } catch (IOException e) {
             return ResultOf.fail("Could not store file", e);
         }
