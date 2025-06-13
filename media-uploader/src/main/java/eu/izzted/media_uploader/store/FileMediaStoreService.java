@@ -28,17 +28,6 @@ public class FileMediaStoreService implements MediaStoreService {
 
     @Override
     public ResultOf<Path> storeFile(MultipartFile file) {
-        log.info("Will save file {} to store... at {}",
-                file.getOriginalFilename(),
-                mediaStorePath);
-
-        if (!this.validateConfig()) {
-            log.error("Path {} does not exist. {}",
-                    this.mediaStorePath,
-                    this.mediaStorePath.toAbsolutePath());
-            return ResultOf.fail("Validation failed");
-        }
-
         String filename = file.getOriginalFilename();
         if (filename == null) {
             log.error("No filename");
@@ -52,7 +41,7 @@ public class FileMediaStoreService implements MediaStoreService {
             return ResultOf.fail("Could not store file", e);
         }
 
-        log.info("... Has saved {}", file.getOriginalFilename());
+        log.info("Has saved {}", file.getOriginalFilename());
         return ResultOf.success(destFile);
     }
 
