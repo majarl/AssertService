@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.nio.file.Path;
+
 @RestController
 @RequestMapping("/api/media-uploader")
 public class MediaUploadEndpoints {
@@ -29,10 +31,10 @@ public class MediaUploadEndpoints {
 
 
     @PostMapping("/upload")
-    public String fileUpload(@RequestParam("file") MultipartFile file) {
+    public ResultOf<Path> fileUpload(@RequestParam("file") MultipartFile file) {
         log.info("Got this file: {}", file.getOriginalFilename());
-        this.mediaStoreService.storeFile(file);
-        return file.getName();
+        ResultOf<Path> result = this.mediaStoreService.storeFile(file);
+        return result;
     }
 
 }
