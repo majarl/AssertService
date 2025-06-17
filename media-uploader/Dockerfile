@@ -1,6 +1,6 @@
 FROM eclipse-temurin:21
 RUN mkdir /opt/app
-RUN mkdir /mnt/media_upload_dir
+# RUN mkdir /mnt/media_upload_dir
 
 COPY target/*.jar /opt/app/media-uploader.jar
 

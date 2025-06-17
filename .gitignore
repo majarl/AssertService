@@ -1,6 +1,8 @@
 
 todo.md
 data/
+media-uploader/upload_dir/*
+!media-uploader/upload_dir/
 
 # Terraform:
 .terraform/
