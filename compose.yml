@@ -1,0 +1,32 @@
+services:
+  bunny:
+    image: rabbitmq:3-management
+    ports:
+      - "8100:15672"
+      - "5672:5672"
+    networks:
+      - dev_net
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    hostname: bunny_host
+    restart: unless-stopped
+    
+  media-uploader:
+    image: media-uploader
+    ports:
+      - "8080:8080"
+    volumes:
+      - /Users/martin/Kode/Terraform/AssetService/data/container_upload_dir:/mnt/media_upload_dir
+    networks:
+      - dev_net
+    depends_on:
+      - bunny
+    restart: unless-stopped
+
+networks:
+  dev_net:
+    driver: bridge
+
+
+
