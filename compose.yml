@@ -24,6 +24,19 @@ services:
       - bunny
     restart: unless-stopped
 
+  media-converter:
+    image: media-converter
+    ports:
+      - "8081:8080"
+    volumes:
+      - /Users/martin/Kode/Terraform/AssetService/data/container_upload_dir:/mnt/media_upload_dir
+    networks:
+      - dev_net
+    depends_on:
+      - bunny
+    restart: unless-stopped
+    
+
 networks:
   dev_net:
     driver: bridge
