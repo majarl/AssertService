@@ -34,7 +34,6 @@ public class FileMediaStoreService implements MediaStoreService {
     public ResultOf<Path> storeFile(MultipartFile file) {
         String filename = file.getOriginalFilename();
         if (filename == null) {
-            log.error("No filename");
             return ResultOf.fail("No filename");
         }
 

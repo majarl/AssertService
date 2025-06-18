@@ -5,7 +5,6 @@ import eu.izzted.media_uploader.store.RabbitConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -37,7 +36,7 @@ public class MediaUploadEndpoints {
 
     @PostMapping("/upload")
     public ResultOf<Path> fileUpload(@RequestParam("file") MultipartFile file) {
-        log.info("Got this file: {}", file.getOriginalFilename());
+        log.info("Uploading this file: {}", file.getOriginalFilename());
         ResultOf<Path> result = this.mediaStoreService.storeFile(file);
         return result;
     }
