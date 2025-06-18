@@ -3,6 +3,7 @@ package eu.izzted.media_uploader.store;
 import eu.izzted.media_uploader.ResultOf;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.amqp.AmqpException;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,8 +30,12 @@ public class UploadMessaging {
     public ResultOf<String> fileNotice(Path file) {
         String filename = String.valueOf(file.getFileName());
         log.info("Will send notice about {} to {}", filename, queue.getName());
-        this.template.convertAndSend(queue.getName(), filename);
-        return ResultOf.success("Has send: " + filename);
+        try {
+            this.template.convertAndSend(queue.getName(), filename);
+            return ResultOf.success("Message send: " + filename);
+        } catch (AmqpException e) {
+            return ResultOf.fail("Could not send message", e);
+        }
     }
 
 }

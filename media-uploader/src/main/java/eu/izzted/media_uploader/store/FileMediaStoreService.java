@@ -40,9 +40,13 @@ public class FileMediaStoreService implements MediaStoreService {
         Path destFile = this.mediaStorePath.resolve(filename);
         try {
             Files.copy(file.getInputStream(), destFile);
-            messaging.fileNotice(destFile);
         } catch (IOException e) {
             return ResultOf.fail("Could not store file", e);
+        }
+
+        ResultOf<String> messagingResult = this.messaging.fileNotice(destFile);
+        if (messagingResult.failed()) {
+            return ResultOf.fail(messagingResult.msg(), messagingResult.e());
         }
 
         log.info("Has saved {}", file.getOriginalFilename());

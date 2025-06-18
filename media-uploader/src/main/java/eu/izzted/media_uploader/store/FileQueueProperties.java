@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @ConfigurationProperties(prefix = "file.queue")
-public class UploadMessageProperties {
+public class FileQueueProperties {
 
     private String name;
 
