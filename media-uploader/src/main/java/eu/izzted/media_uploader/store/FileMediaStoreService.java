@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 
 @Service
 public class FileMediaStoreService implements MediaStoreService {
@@ -39,7 +40,9 @@ public class FileMediaStoreService implements MediaStoreService {
 
         Path destFile = this.mediaStorePath.resolve(filename);
         try {
-            Files.copy(file.getInputStream(), destFile);
+            Files.copy(file.getInputStream(),
+                    destFile,
+                    StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
             return ResultOf.fail("Could not store file", e);
         }
