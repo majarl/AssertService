@@ -20,7 +20,7 @@ public class FileNoticeConsumer {
     }
 
 
-    @RabbitListener(queues = {"${file.queue.name}"})
+    @RabbitListener(queues = {"${file.queue.name}"}, errorHandler = "fileNoticeErrorHandler")
     public void consume(String msg) {
         log.info("Got message: {}", msg);
         this.converter.convertFile(msg);

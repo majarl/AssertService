@@ -10,4 +10,9 @@ public class RabbitConfig {
     @Value("${file.queue.name}")
     private String queueName;
 
+    @Bean
+    public FileNoticeErrorHandler fileNoticeErrorHandler() {
+        return new FileNoticeErrorHandler();
+    }
+
 }
