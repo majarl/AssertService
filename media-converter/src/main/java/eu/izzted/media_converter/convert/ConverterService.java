@@ -7,9 +7,9 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 @Service
-public class Converter {
+public class ConverterService {
 
-    private static final Logger log = LoggerFactory.getLogger(Converter.class);
+    private static final Logger log = LoggerFactory.getLogger(ConverterService.class);
 
     @Value("${media-store.location}")
     private String mediaStoreLocation;
@@ -17,6 +17,7 @@ public class Converter {
     @Async
     public void convertFile(String filename) {
         log.info("Conversion has been requested for {} at {}", filename, mediaStoreLocation);
+
     }
 
 

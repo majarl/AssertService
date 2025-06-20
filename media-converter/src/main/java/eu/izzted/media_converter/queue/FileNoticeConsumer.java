@@ -1,6 +1,6 @@
 package eu.izzted.media_converter.queue;
 
-import eu.izzted.media_converter.convert.Converter;
+import eu.izzted.media_converter.convert.ConverterService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
@@ -12,10 +12,10 @@ public class FileNoticeConsumer {
 
     private final static Logger log = LoggerFactory.getLogger(FileNoticeConsumer.class);
 
-    private final Converter converter;
+    private final ConverterService converter;
 
     @Autowired
-    public FileNoticeConsumer(RabbitConfig config, Converter converter) {
+    public FileNoticeConsumer(RabbitConfig config, ConverterService converter) {
         this.converter = converter;
     }
 
