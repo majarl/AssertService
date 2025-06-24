@@ -32,9 +32,7 @@ public class ConvertEndpoints {
     @PostMapping("/convert")
     public String convert(@RequestParam(value = "filename") String filename) {
         log.info("filename = {}", filename);
-        this.converter.convertFile(filename);
-
-        return "todo";
+        return this.converter.convertFile(filename);
     }
 
     @GetMapping("/convert_test")
@@ -44,6 +42,7 @@ public class ConvertEndpoints {
         String cmd = "ffmpeg -i oregano.mov -codec:v h264 -codec:a aac -map 0 -f hls -hls_time 10 -hls_list_size 0 output.m3u8";
 
         String[] commands = cmd.split(" ");
+        System.out.println(commands);
 
         System.out.println("---> commands: \n" + Arrays.toString(commands));
 
