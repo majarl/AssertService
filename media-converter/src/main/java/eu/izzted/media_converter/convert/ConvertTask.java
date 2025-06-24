@@ -23,9 +23,9 @@ public class ConvertTask implements Runnable {
     @Override
     public void run() {
         String taskUuid = UUID.randomUUID().toString();
-        log.info(">>>>> {} : Starting to convert {} ...", taskUuid, this.origFile);
+        log.info("   >>>>> {} : Starting to convert {} ...", taskUuid, this.origFile);
         this.t = this.convert();
-        log.info(">>>>> {} : Conversion has ended for {}", taskUuid, this.origFile);
+        log.info("   >>>>> {} : Conversion has ended for {}", taskUuid, this.origFile);
     }
 
 

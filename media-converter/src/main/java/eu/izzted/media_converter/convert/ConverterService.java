@@ -17,15 +17,15 @@ public class ConverterService {
 
     private static final Logger log = LoggerFactory.getLogger(ConverterService.class);
 
+    private static final ExecutorService exeService = Executors.newFixedThreadPool(5);
+
     @Value("${media-store.location}")
     private String mediaStoreLocation;
 
     public void convertFile(String path) {
         log.info("Conversion has been requested for {} at {}", path, mediaStoreLocation);
         ConvertTask task = new ConvertTask(path);
-        try (ExecutorService executorService = Executors.newFixedThreadPool(5)) {
-            executorService.submit(task);
-        }
+        exeService.submit(task);
     }
 
 
