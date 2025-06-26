@@ -7,9 +7,12 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
-import java.util.Random;
 import java.util.UUID;
 
+
+/// Task that converts a video file to streaming friendly file (HLS). It uses a system
+/// installed instance of ffmpeg.
+/// [FFMPEG docs](https://ffmpeg-api.com/learn/ffmpeg/recipe/live-streaming)
 public class ConvertTask implements Runnable {
 
     private static final Logger log = LoggerFactory.getLogger(ConvertTask.class);
@@ -29,32 +32,12 @@ public class ConvertTask implements Runnable {
 
     @Override
     public void run() {
-        log.info("   >>>>> {} : Starting to convert {} ...", this.id, this.origFile);
-        long dt = realConvert(this.origFile);
-        log.info("   >>>>> {} : Conversion has ended for {}", this.id, this.origFile);
+        long dt = convert(this.origFile);
         log.info("Took about {}ms", dt);
     }
 
 
-    private long fakeConvert() {
-        Random r = new Random();
-        long min = 5_000;
-        long max = 10_000;
-        long z = min + (long) (r.nextDouble() * (max - min));
-
-        try {
-            log.info("... Convert convert convert ... {}", z);
-            Thread.sleep(z);
-        } catch (InterruptedException e) {
-            log.warn("Interrupted: {}", e.getLocalizedMessage());
-        }
-
-        return z;
-    }
-
-
-    private long realConvert(String path) {
-        // [ffmpeg, -i, oregano.mov, -codec:v, h264, -codec:a, aac, -map, 0, -f, hls, -hls_time, 10, -hls_list_size, 0, output.m3u8]
+    private long convert(String path) {
         String[] command = {
                 "ffmpeg",
                 "-i", path,
