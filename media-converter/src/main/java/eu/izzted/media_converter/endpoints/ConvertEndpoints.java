@@ -6,6 +6,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/converter")
 public class ConvertEndpoints {
@@ -13,6 +15,8 @@ public class ConvertEndpoints {
     private static final Logger log = LoggerFactory.getLogger(ConvertEndpoints.class);
 
     private final ConverterService converter;
+
+    ConvertStatusMessages msgStore = ConvertStatusMessages.instance();
 
     @Autowired
     public ConvertEndpoints(ConverterService converter) {
@@ -32,9 +36,14 @@ public class ConvertEndpoints {
     }
 
     @GetMapping("/status")
-    public ConvertEndpointResponse status(@RequestParam(value = "jobId") String jobId) {
+    public List<ConvertMsg> status() {
+        return msgStore.peekMessages();
+    }
 
-        return ConvertEndpointResponse.create("0", "todo");
+    @GetMapping("status/{jobId}")
+    public ConvertStatusResponse convertStatusForJob(@PathVariable String jobId) {
+        List<ConvertMsg> msgList = msgStore.getMessages(jobId);
+        return new ConvertStatusResponse(jobId, msgList);
     }
 
 }

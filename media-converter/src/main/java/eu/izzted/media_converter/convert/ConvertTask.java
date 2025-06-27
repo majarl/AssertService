@@ -1,5 +1,7 @@
 package eu.izzted.media_converter.convert;
 
+import eu.izzted.media_converter.endpoints.ConvertMsg;
+import eu.izzted.media_converter.endpoints.ConvertStatusMessages;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -10,9 +12,11 @@ import java.util.Arrays;
 import java.util.UUID;
 
 
+///
 /// Task that converts a video file to streaming friendly file (HLS). It uses a system
 /// installed instance of ffmpeg.
 /// [FFMPEG docs](https://ffmpeg-api.com/learn/ffmpeg/recipe/live-streaming)
+///
 public class ConvertTask implements Runnable {
 
     private static final Logger log = LoggerFactory.getLogger(ConvertTask.class);
@@ -21,8 +25,7 @@ public class ConvertTask implements Runnable {
 
     private final String id;
 
-    private long t = 0;
-
+    private final ConvertStatusMessages msgStore = ConvertStatusMessages.instance();
 
     public ConvertTask(String path) {
         this.origFile = path;
@@ -32,8 +35,20 @@ public class ConvertTask implements Runnable {
 
     @Override
     public void run() {
+        long jobStart = System.currentTimeMillis();
+        this.msgStore.addMessage(
+                ConvertMsg.create(id,
+                        "Start",
+                        jobStart,
+                        "File: " + this.origFile));
+
         long dt = convert(this.origFile);
-        log.info("Took about {}ms", dt);
+
+        msgStore.addMessage(
+                ConvertMsg.create(id,
+                        "Ended",
+                        jobStart,
+                        ""));
     }
 
 
@@ -68,9 +83,11 @@ public class ConvertTask implements Runnable {
             }
 
             int exitCode = p.waitFor();
+            this.msgStore.addMessage(ConvertMsg.create(this.id,
+                    "FFMPEG done",
+                    -1,
+                    Arrays.toString(command) + "exitCode: " + exitCode));
 
-            log.info("Process done. exitCode = {}", exitCode);
-            log.info("Output: {}", outputBuffer.toString());
             reader.close();
         } catch (IOException | InterruptedException e) {
             log.error("Exception: {}", e.getLocalizedMessage());
