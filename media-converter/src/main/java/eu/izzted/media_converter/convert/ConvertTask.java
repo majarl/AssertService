@@ -1,7 +1,7 @@
 package eu.izzted.media_converter.convert;
 
-import eu.izzted.media_converter.endpoints.ConvertMsg;
-import eu.izzted.media_converter.endpoints.ConvertStatusMessages;
+import eu.izzted.media_converter.endpoints.ConvertEvent;
+import eu.izzted.media_converter.endpoints.ConvertStatusEvents;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,7 +25,7 @@ public class ConvertTask implements Runnable {
 
     private final String id;
 
-    private final ConvertStatusMessages msgStore = ConvertStatusMessages.instance();
+    private final ConvertStatusEvents msgStore = ConvertStatusEvents.instance();
 
     public ConvertTask(String path) {
         this.origFile = path;
@@ -36,16 +36,16 @@ public class ConvertTask implements Runnable {
     @Override
     public void run() {
         long jobStart = System.currentTimeMillis();
-        this.msgStore.addMessage(
-                ConvertMsg.create(id,
+        this.msgStore.addEvent(
+                ConvertEvent.create(id,
                         "Start",
                         jobStart,
                         "File: " + this.origFile));
 
         long dt = convert(this.origFile);
 
-        msgStore.addMessage(
-                ConvertMsg.create(id,
+        msgStore.addEvent(
+                ConvertEvent.create(id,
                         "Ended",
                         jobStart,
                         ""));
@@ -83,7 +83,7 @@ public class ConvertTask implements Runnable {
             }
 
             int exitCode = p.waitFor();
-            this.msgStore.addMessage(ConvertMsg.create(this.id,
+            this.msgStore.addEvent(ConvertEvent.create(this.id,
                     "FFMPEG done",
                     -1,
                     Arrays.toString(command) + "exitCode: " + exitCode));

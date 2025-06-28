@@ -16,7 +16,7 @@ public class ConvertEndpoints {
 
     private final ConverterService converter;
 
-    ConvertStatusMessages msgStore = ConvertStatusMessages.instance();
+    ConvertStatusEvents msgStore = ConvertStatusEvents.instance();
 
     @Autowired
     public ConvertEndpoints(ConverterService converter) {
@@ -36,13 +36,13 @@ public class ConvertEndpoints {
     }
 
     @GetMapping("/status")
-    public List<ConvertMsg> status() {
-        return msgStore.peekMessages();
+    public List<ConvertEvent> status() {
+        return msgStore.peekEvents();
     }
 
     @GetMapping("status/{jobId}")
     public ConvertStatusResponse convertStatusForJob(@PathVariable String jobId) {
-        List<ConvertMsg> msgList = msgStore.getMessages(jobId);
+        List<ConvertEvent> msgList = msgStore.getEvents(jobId);
         return new ConvertStatusResponse(jobId, msgList);
     }
 
