@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 @RestController
 @RequestMapping("/api/converter")
@@ -36,7 +38,7 @@ public class ConvertEndpoints {
     }
 
     @GetMapping("/status")
-    public List<ConvertEvent> status() {
+    public Map<String, CopyOnWriteArrayList<ConvertEvent>> status() {
         return msgStore.peekEvents();
     }
 

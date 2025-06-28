@@ -3,14 +3,17 @@ package eu.izzted.media_converter.endpoints;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class ConvertStatusEvents {
 
     private static ConvertStatusEvents convertStatusEvents;
 
-    private List<ConvertEvent> events = new CopyOnWriteArrayList<>();
-    
+    private Map<String, CopyOnWriteArrayList<ConvertEvent>> events =
+            new ConcurrentHashMap<>();
+
     private ConvertStatusEvents() { }
 
 
@@ -22,17 +25,21 @@ public class ConvertStatusEvents {
     }
 
 
-    public void addEvent(ConvertEvent msg) {
-        this.events.add(msg);
+    public void addEvent(ConvertEvent event) {
+        if (!this.events.containsKey(event.jobId())) {
+            this.events.put(event.jobId(), new CopyOnWriteArrayList<>());
+        }
+        this.events.get(event.jobId()).add(event);
     }
 
 
     public List<ConvertEvent> getEvents(String withJobId) {
-        List<ConvertEvent> msgListWithJobId = this.events.stream()
-                .filter(msg -> msg.jobId().equals(withJobId))
-                .toList();
-        this.events.removeAll(msgListWithJobId);
-        return msgListWithJobId;
+        if (!this.events.containsKey(withJobId)) {
+            return new ArrayList<>();
+        }
+        List<ConvertEvent> convertEvents = new ArrayList<>(this.events.get(withJobId));
+        this.events.get(withJobId).clear();
+        return convertEvents;
     }
 
 
@@ -44,12 +51,16 @@ public class ConvertStatusEvents {
     }
 
 
-    public List<ConvertEvent> cleanUp(long limitMs, long now) {
+    public List<ConvertEvent> cleanUp(String jobId, long limitMs, long now) {
+        if (!this.events.containsKey(jobId)) {
+            return new ArrayList<>();
+        }
+
         List<ConvertEvent> removed = new ArrayList<>();
-        for (ConvertEvent cm : this.events) {
+        for (ConvertEvent cm : this.events.get(jobId)) {
             long diff = now - limitMs;
             if (diff > cm.timestamp()) {
-                this.events.remove(cm);
+                this.events.get(jobId).remove(cm);
                 removed.add(cm);
             }
         }
@@ -57,7 +68,7 @@ public class ConvertStatusEvents {
     }
 
 
-    public List<ConvertEvent> peekEvents() {
+    public Map<String, CopyOnWriteArrayList<ConvertEvent>> peekEvents() {
         return events;
     }
 
